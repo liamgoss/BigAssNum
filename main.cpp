@@ -37,7 +37,6 @@ public:
         throw invalid_argument("No arguments specified!");
     }
 
-
 };
 
 int main() {

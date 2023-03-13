@@ -1,44 +1,43 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#include <cmath>
 // 174981883239023362650696299580 ^ 3 mod 174981883239023362450696299581 = 3280075090892117215879456260
 
 class BigAssNum {
 private:
-    std::vector<int> value;
+    std::string value;
 public:
-    void printValue() {
-        for (int i = 0; i < value.size(); i++) {
-            std::cout << value[i] << " ";
+
+    std::string operator + (BigAssNum &b) {
+        std::string result;
+        int carry = 0;
+        int i = value.size() - 1;
+        int j = b.getValue().size() - 1;
+        int x,y,sum;
+        while (i >= 0 || j >= 0 || carry > 0) {
+            x = (i >= 0) ? value[i--] - '0' : 0;
+            y = (j >= 0) ? b.value[j--] - '0' : 0;
+            sum = x + y + carry;
+            result.insert(0, std::to_string(sum % 10));
+            carry = sum / 10;
         }
-        std::cout << std::endl;
-    }
-
-    std::string exponentiate(int power) {
-        std::string uwu = "uwu";
-        return uwu;
-    }
-
-
-    std::string vecToString(std::vector<int> input) {
-        std::string output;
-        for (int i=0; i<input.size(); i++) {
-            output += std::to_string(input[i]);
-        }
-        return output;
+        return result;
     }
     
 
+    
+
     std::string getValue() {
-        return vecToString(value);
+        return value;
+    }
+    void setValue(std::string val) {
+        value = val;
     }
     
     BigAssNum(std::string val) {
         // Preferred constructor
-        for (auto it: val) {
-            value.push_back(atoi(&it)); // Convert digit character to int
-        }
+        setValue(val);
     }
 
     BigAssNum() {
@@ -50,5 +49,6 @@ public:
 
 int main() {
     BigAssNum test("01234");
+    
     return 0;
 }

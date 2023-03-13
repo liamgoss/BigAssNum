@@ -33,6 +33,7 @@ public:
         std::string result;
         int counter = 0;
         int product, carry, aDigit, bDigit;
+        std::string tmpRes;
         std::vector<int> res;
         for (int i = 0; i<b.getValue().size(); i++) {
             carry = 0;
@@ -42,9 +43,14 @@ public:
                 product = (aDigit * bDigit) + carry;
                 std::cout << aDigit << " * " << bDigit << " + " << carry << " = " << product << std::endl;
                 carry = product / 10;
-                res[counter + i] = std::atoi(&getValue()[i]) % std::atoi(&b.getValue()[j]);
+                res.push_back(aDigit & bDigit);
+                //res[counter + i] = std::atoi(&getValue()[i]) % std::atoi(&b.getValue()[j]);
             }
             counter++; // current level of multiplication
+            for (int k = 0; k < counter; k++){
+                res.push_back(0);
+            }
+            
         }
         for (auto it: res) {
             result.insert(0, std::to_string(it));

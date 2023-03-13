@@ -17,6 +17,13 @@ public:
         cout << endl;
     }
 
+    string getValue() {
+        string output;
+        for (int i=0; i<value.size(); i++) {
+            output += to_string(value[i]);
+        }
+        return output;
+    }
      
     BigAssNum(string val) {
         // Preferred constructor
@@ -35,6 +42,5 @@ public:
 
 int main() {
     BigAssNum test("01234");
-    test.printValue();
     return 0;
 }

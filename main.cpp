@@ -31,30 +31,26 @@ public:
 
     std::string operator * (BigAssNum &b) {
         std::string result;
-        int counter = 0;
         int product, carry, aDigit, bDigit;
         std::string tmpRes;
         std::vector<int> res;
-        for (int i = 0; i<b.getValue().size(); i++) {
+
+        for (auto i: b.getValue()) { // for char in str
             carry = 0;
-            for (int j = 0; j<getValue().size(); j++) {
-                aDigit = std::atoi(&getValue()[i]);
-                bDigit = std::atoi(&b.getValue()[j]);
+            for (auto j: getValue()) {
+                aDigit = std::atoi(&i);
+                bDigit = std::atoi(&j);
                 product = (aDigit * bDigit) + carry;
                 std::cout << aDigit << " * " << bDigit << " + " << carry << " = " << product << std::endl;
                 carry = product / 10;
-                res.push_back(aDigit & bDigit);
-                //res[counter + i] = std::atoi(&getValue()[i]) % std::atoi(&b.getValue()[j]);
+                res.push_back(product % 10);
             }
-            counter++; // current level of multiplication
-            for (int k = 0; k < counter; k++){
-                res.push_back(0);
-            }
-            
         }
-        for (auto it: res) {
-            result.insert(0, std::to_string(it));
-        }        
+        // Put the result digits into the string
+        for (int i=res.size()-1; i>=0; i--) {
+            result.insert(0, std::to_string(res[i]));
+        }
+        
         return result;
     }
 

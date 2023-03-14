@@ -4,11 +4,26 @@
 #include <cmath>
 // 174981883239023362650696299580 ^ 3 mod 174981883239023362450696299581 = 3280075090892117215879456260
 
+
+std::string prettyPrint(std::string ugly) {
+    // Determine the position where the first comma should be inserted
+    int first_comma_pos = ugly.length() % 3;
+    if (first_comma_pos == 0) {
+        first_comma_pos = 3;
+    }
+    
+    // Insert commas after every three digits, starting from the first comma position
+    for (int i = first_comma_pos; i < ugly.length(); i += 4) {
+        ugly.insert(i, ",");
+    }
+    
+    return ugly;
+}
+
 class BigAssNum {
 private:
     std::string value;
 public:
-
     std::string operator + (BigAssNum &b) {
         std::string result;
         int carry = 0;
@@ -59,6 +74,7 @@ public:
         return result;
     }
 
+    
     std::string string() {
         return getValue();
     }
@@ -82,24 +98,23 @@ public:
 };
 
 int main() {
-    BigAssNum val1("174981883239023362650696299580");
-    BigAssNum test1("5");
-    BigAssNum test2("4");
-    BigAssNum test3("4");
+    BigAssNum test1("174981883239023362650696299580");
+    BigAssNum test2("174981883239023362650696299580");
+    BigAssNum test3("174981883239023362650696299580");
 
     BigAssNum product = test1 * test2;
     std::string result = product * test3;
-    std::cout << result <<  std::endl;
-    /*
+    std::cout << prettyPrint(result) <<  std::endl;
+    
     //std::string product = val1 * val2 * val3;
 
-    BigAssNum result(val1*val2);
-    std::cout << result.getValue() << std::endl;
+    
+    
 
     // Check if 174981883239023362650696299580 ^ 3 mod 174981883239023362450696299581 gave the right answer
-    bool correctAnswer = result.getValue() == "5357710694893265063503016372118087519550604651571638219891423134484499571299081885912000";
-    std::string print = (correctAnswer) ? "Correct!" : "Incorrect!";
-    std::cout << print << std::endl;
-    */
+    bool correctAnswer = result == "5357710694893265063503016372118087519550604651571638219891423134484499571299081885912000";
+    std::string finalPrint = (correctAnswer) ? "Correct!" : "Incorrect!";
+    std::cout << finalPrint << std::endl;
+    
     return 0;
 }

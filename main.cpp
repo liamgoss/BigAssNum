@@ -28,62 +28,41 @@ public:
         }
         return result;
     }
-/*
-    std::string operator * (BigAssNum &b) {
-        std::string result;
-        int product, carry, aDigit, bDigit;
-        std::string tmpRes;
-        std::vector<int> res;
 
-        for (auto i: b.getValue()) { // for char in str
-            carry = 0;
-            for (auto j: getValue()) {
-                aDigit = std::atoi(&i);
-                bDigit = std::atoi(&j);
-                product = ((aDigit * bDigit) + carry);
-                std::cout << aDigit << " * " << bDigit << " + " << carry << " = " << product << std::endl;
+    std::string operator * (BigAssNum& b) {
+        std::string result;
+        std::vector<int> res(getValue().size() + b.getValue().size(), 0);
+
+        for (int i = getValue().size() - 1; i >= 0; --i) {
+            int carry = 0;
+            for (int j = b.getValue().size() - 1; j >= 0; --j) {
+                int aDigit = getValue()[i] - '0';
+                int bDigit = b.getValue()[j] - '0';
+                int product = aDigit * bDigit + carry + res[i+j+1];
                 carry = product / 10;
-                res.push_back(product % 10);
+                res[i+j+1] = product % 10;
             }
+            res[i] += carry;
         }
-        // Put the result digits into the string
-        for (int i=res.size()-1; i>=0; i--) {
-            result.insert(0, std::to_string(res[i]));
+
+        // Skip leading zeros
+        int i = 0;
+        while (i < res.size() - 1 && res[i] == 0) {
+            ++i;
         }
-        
+
+        // Convert to string
+        while (i < res.size()) {
+            result += std::to_string(res[i++]);
+        }
+
         return result;
     }
-*/
 
-std::string operator*(BigAssNum& b) {
-    std::string result;
-    std::vector<int> res(getValue().size() + b.getValue().size(), 0);
-
-    for (int i = getValue().size() - 1; i >= 0; --i) {
-        int carry = 0;
-        for (int j = b.getValue().size() - 1; j >= 0; --j) {
-            int aDigit = getValue()[i] - '0';
-            int bDigit = b.getValue()[j] - '0';
-            int product = aDigit * bDigit + carry + res[i+j+1];
-            carry = product / 10;
-            res[i+j+1] = product % 10;
-        }
-        res[i] += carry;
+    std::string string() {
+        return getValue();
     }
 
-    // Skip leading zeros
-    int i = 0;
-    while (i < res.size() - 1 && res[i] == 0) {
-        ++i;
-    }
-
-    // Convert to string
-    while (i < res.size()) {
-        result += std::to_string(res[i++]);
-    }
-
-    return result;
-}
     std::string getValue() {
         return value;
     }
@@ -103,10 +82,13 @@ std::string operator*(BigAssNum& b) {
 };
 
 int main() {
-    //BigAssNum val1("174981883239023362650696299580");
-    BigAssNum test1("1234");
-    BigAssNum test2("5"); // 3702
-    std::string result = test1 * test2;
+    BigAssNum val1("174981883239023362650696299580");
+    BigAssNum test1("5");
+    BigAssNum test2("4");
+    BigAssNum test3("4");
+
+    BigAssNum product = test1 * test2;
+    std::string result = product * test3;
     std::cout << result <<  std::endl;
     /*
     //std::string product = val1 * val2 * val3;

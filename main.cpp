@@ -44,6 +44,30 @@ public:
         return result;
     }
 
+
+    std::string operator - (BigAssNum& b) {
+        std::string result;
+        int borrow = 0;
+        int i = getValue().size() - 1;
+        int j = b.getValue().size() - 1;
+        int x,y,diff;
+        while (i >= 0 || j >= 0) {
+            x = (i >= 0) ? getValue()[i--] - '0' : 0;
+            y = (j >= 0) ? b.value[j--] - '0' : 0;
+            diff = x - y - borrow;
+            borrow = 0;
+            if (diff < 0) {
+                diff += 10;
+                borrow = 1;
+            }
+            result.insert(0, std::to_string(diff));
+        }
+        while (result.size() > 1 && result[0] == '0') {
+            result.erase(0, 1); // Remove leading zeros
+        }
+        return result;
+    }
+
     std::string operator * (BigAssNum& b) {
         std::string result;
         std::vector<int> res(getValue().size() + b.getValue().size(), 0);
@@ -98,6 +122,15 @@ public:
 };
 
 int main() {
+    BigAssNum sub1("1234");
+    BigAssNum sub2("69");
+    std::string result = sub1 - sub2;
+    std::cout << prettyPrint(result) <<  std::endl;
+    
+
+    
+    /*
+    
     BigAssNum test1("174981883239023362650696299580");
     BigAssNum test2("174981883239023362650696299580");
     BigAssNum test3("174981883239023362650696299580");
@@ -115,6 +148,7 @@ int main() {
     bool correctAnswer = result == "5357710694893265063503016372118087519550604651571638219891423134484499571299081885912000";
     std::string finalPrint = (correctAnswer) ? "Correct!" : "Incorrect!";
     std::cout << finalPrint << std::endl;
-    
+    */
     return 0;
+    
 }

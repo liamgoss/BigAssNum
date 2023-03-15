@@ -11,12 +11,12 @@ std::string prettyPrint(std::string ugly) {
     if (first_comma_pos == 0) {
         first_comma_pos = 3;
     }
-    
+
     // Insert commas after every three digits, starting from the first comma position
     for (int i = first_comma_pos; i < ugly.length(); i += 4) {
         ugly.insert(i, ",");
     }
-    
+
     return ugly;
 }
 
@@ -126,7 +126,7 @@ public:
         return result;
     }
 
-    
+
     std::string string() {
         return getValue();
     }
@@ -137,7 +137,7 @@ public:
     void setValue(std::string val) {
         value = val;
     }
-    
+
     BigAssNum(std::string val) {
         // Preferred constructor
         setValue(val);
@@ -149,16 +149,45 @@ public:
 
 };
 
-int main() {
-    BigAssNum sub1("1234");
-    BigAssNum sub2("-2");
-    std::string result = sub1 + sub2;
-    std::cout << prettyPrint(result) <<  std::endl;
-    
 
-    
+std::string modBig(BigAssNum num, BigAssNum mods) { //only working for small numbers
+    std::string temp;
+    BigAssNum result(num.getValue());
+    BigAssNum holdmods(mods.getValue());
+    while(result.getValue()[0] != '-') {
+        temp = result - mods;
+        result.setValue(temp);
+    }
+    temp = holdmods + result;
+    return temp;
+}
+
+
+
+int main() {
+
+    BigAssNum sub1("5000000");
+    BigAssNum sub2("13");
+    std::string result = modBig(sub1,sub2);
+    std::cout << prettyPrint(sub1.getValue()) << " mod " << prettyPrint(sub2.getValue()) << " = " << prettyPrint(result) << std::endl;
+
+
     /*
-    
+    BigAssNum test1("174981883239023362650696299580");
+    BigAssNum test2("174981883239023362650696299580");
+    BigAssNum test3("174981883239023362650696299580");
+    BigAssNum modu("174981883239023362450696299581");
+
+    BigAssNum product = test1 * test2;
+    std::string result = product * test3;
+    product.setValue(result);
+    result = modBig(product,modu);
+    std::cout << prettyPrint(result) <<  std::endl;
+    */
+
+
+    /*
+
     BigAssNum test1("174981883239023362650696299580");
     BigAssNum test2("174981883239023362650696299580");
     BigAssNum test3("174981883239023362650696299580");
@@ -166,11 +195,11 @@ int main() {
     BigAssNum product = test1 * test2;
     std::string result = product * test3;
     std::cout << prettyPrint(result) <<  std::endl;
-    
+
     //std::string product = val1 * val2 * val3;
 
-    
-    
+
+
 
     // Check if 174981883239023362650696299580 ^ 3 mod 174981883239023362450696299581 gave the right answer
     bool correctAnswer = result == "5357710694893265063503016372118087519550604651571638219891423134484499571299081885912000";
@@ -178,5 +207,5 @@ int main() {
     std::cout << finalPrint << std::endl;
     */
     return 0;
-    
+
 }

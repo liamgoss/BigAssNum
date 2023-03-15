@@ -25,6 +25,10 @@ private:
     std::string value;
 public:
     std::string operator + (BigAssNum &b) {
+        if (b.getValue()[0] == '-') {
+            BigAssNum tmp(b.getValue().erase(0, 1)); // remove '-'
+            return *this - tmp;
+        }
         std::string result;
         int carry = 0;
         int i = getValue().size() - 1;
@@ -45,29 +49,52 @@ public:
     }
 
 
-    std::string operator - (BigAssNum& b) {
-        // Assumption:  a>=b>=0
+    std::string operator - (BigAssNum &b) {
+        if (getValue()[0] == '-' || b.getValue()[0] == '-') {
+            std::cout << std::endl << "Negative subtraction is not supported yet!" << std::endl;
+            return "X";
+        }
         std::string result;
-        int borrow = 0;
+        bool is_negative = false;
+
+        // If the second operand is greater than the first, swap them and mark the result as negative
+        if (getValue().size() < b.getValue().size() || (getValue().size() == b.getValue().size() && getValue() < b.getValue())) {
+            is_negative = true;
+            std::string tmpVal = getValue();
+            setValue(b.getValue());
+            b.setValue(tmpVal);
+        }
+
+        int carry = 0;
         int i = getValue().size() - 1;
         int j = b.getValue().size() - 1;
         int x,y,diff;
-        while (i >= 0 || j >= 0) {
+        while (i >= 0 || j >= 0 || carry > 0) {
             x = (i >= 0) ? getValue()[i--] - '0' : 0;
-            y = (j >= 0) ? b.value[j--] - '0' : 0;
-            diff = x - y - borrow;
-            borrow = 0;
+            y = (j >= 0) ? b.getValue()[j--] - '0' : 0;
+            diff = x - y - carry;
             if (diff < 0) {
                 diff += 10;
-                borrow = 1;
+                carry = 1;
+            } else {
+                carry = 0;
             }
             result.insert(0, std::to_string(diff));
         }
+
+        // Remove leading zeros
         while (result.size() > 1 && result[0] == '0') {
-            result.erase(0, 1); // Remove leading zeros
+            result.erase(0, 1);
         }
+
+        // Add a minus sign if the result is negative
+        if (is_negative) {
+            result.insert(0, "-");
+        }
+
         return result;
     }
+
 
     std::string operator * (BigAssNum& b) {
         std::string result;
@@ -124,8 +151,8 @@ public:
 
 int main() {
     BigAssNum sub1("1234");
-    BigAssNum sub2("69");
-    std::string result = sub1 - sub2;
+    BigAssNum sub2("-2");
+    std::string result = sub1 + sub2;
     std::cout << prettyPrint(result) <<  std::endl;
     
 

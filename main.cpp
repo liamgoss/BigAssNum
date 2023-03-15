@@ -48,7 +48,6 @@ public:
         return result;
     }
 
-
     std::string operator - (BigAssNum &b) {
         if (getValue()[0] == '-' || b.getValue()[0] == '-') {
             std::cout << std::endl << "Negative subtraction is not supported yet!" << std::endl;
@@ -126,6 +125,24 @@ public:
         return result;
     }
 
+    std::string operator / (BigAssNum &b) {
+        // TODO
+        std::string result = "X";
+        return result;
+    }
+
+    std::string operator % (BigAssNum &b) {
+        // TODO
+        std::string result = "X";
+        return result;
+    }
+
+    std::string operator ^ (BigAssNum &b) {
+        // TODO
+        // This overload will NOT perform an XOR, it will exponentiate
+        std::string result = "X";
+        return result;
+    }
 
     std::string string() {
         return getValue();
@@ -166,10 +183,10 @@ std::string modBig(BigAssNum num, BigAssNum mods) { //only working for small num
 
 int main() {
 
-    BigAssNum sub1("5000000");
-    BigAssNum sub2("13");
-    std::string result = modBig(sub1,sub2);
-    std::cout << prettyPrint(sub1.getValue()) << " mod " << prettyPrint(sub2.getValue()) << " = " << prettyPrint(result) << std::endl;
+    BigAssNum test1("174981883239023362650696299580");
+    BigAssNum test2("2");
+    std::string result = test1 * test2;
+    std::cout << prettyPrint(test1.getValue()) << " * " << prettyPrint(test2.getValue()) << " = " << prettyPrint(result) << std::endl;
 
 
     /*

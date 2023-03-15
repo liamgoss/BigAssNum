@@ -140,8 +140,23 @@ public:
     std::string operator ^ (BigAssNum &b) {
         // TODO
         // This overload will NOT perform an XOR, it will exponentiate
+        /*
+            *this ^ b.getValue()
+        */
         std::string result = "X";
         return result;
+    }
+
+    std::string mod(BigAssNum m) {
+        std::string temp;
+        BigAssNum result(getValue());
+        BigAssNum holdmods(m.getValue());
+        while(result.getValue()[0] != '-') {
+            temp = result - m;
+            result.setValue(temp);
+        }
+        temp = holdmods + result;
+        return temp;
     }
 
     std::string string() {
@@ -165,19 +180,6 @@ public:
     }
 
 };
-
-
-std::string modBig(BigAssNum num, BigAssNum mods) { //only working for small numbers
-    std::string temp;
-    BigAssNum result(num.getValue());
-    BigAssNum holdmods(mods.getValue());
-    while(result.getValue()[0] != '-') {
-        temp = result - mods;
-        result.setValue(temp);
-    }
-    temp = holdmods + result;
-    return temp;
-}
 
 
 

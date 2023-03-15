@@ -158,6 +158,11 @@ public:
         temp = holdmods + result;
         return temp;
     }
+    std::string mod(std::string m) {
+        // Overload mod to take in a string just to cover all cases
+        BigAssNum m_tmp(m);
+        return this->mod(m_tmp);
+    }
 
     std::string string() {
         return getValue();

@@ -46,6 +46,7 @@ public:
 
 
     std::string operator - (BigAssNum& b) {
+        // Assumption:  a>=b>=0
         std::string result;
         int borrow = 0;
         int i = getValue().size() - 1;

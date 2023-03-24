@@ -48,6 +48,7 @@ public:
         return result;
     }
 
+
     std::string operator - (BigAssNum &b) {
         if (getValue()[0] == '-' || b.getValue()[0] == '-') {
             std::cout << std::endl << "Negative subtraction is not supported yet!" << std::endl;
@@ -125,44 +126,27 @@ public:
         return result;
     }
 
-    std::string operator / (BigAssNum &b) {
-        // TODO
-        std::string result = "X";
-        return result;
-    }
+    std::string operator / (BigAssNum& b) {
+        std::string result;
+        std::vector<int> res(getValue().size() + b.getValue().size(), 0);
 
-    std::string operator % (BigAssNum &b) {
-        // TODO
-        std::string result = "X";
-        return result;
-    }
 
-    std::string operator ^ (BigAssNum &b) {
-        // TODO
-        // This overload will NOT perform an XOR, it will exponentiate
-        /*
-            *this ^ b.getValue()
-        */
-        std::string result = "X";
-        return result;
-    }
 
-    std::string mod(BigAssNum m) {
-        std::string temp;
-        BigAssNum result(getValue());
-        BigAssNum holdmods(m.getValue());
-        while(result.getValue()[0] != '-') {
-            temp = result - m;
-            result.setValue(temp);
+
+        // Skip leading zeros
+        int i = 0;
+        while (i < res.size() - 1 && res[i] == 0) {
+            ++i;
         }
-        temp = holdmods + result;
-        return temp;
+
+        // Convert to string
+        while (i < res.size()) {
+            result += std::to_string(res[i++]);
+        }
+
+        return result;
     }
-    std::string mod(std::string m) {
-        // Overload mod to take in a string just to cover all cases
-        BigAssNum m_tmp(m);
-        return this->mod(m_tmp);
-    }
+
 
     std::string string() {
         return getValue();
@@ -186,50 +170,104 @@ public:
 
 };
 
+std::string BigToBin(BigAssNum num) {
+    BigAssNum ret("0");
+    BigAssNum temp("0");
+    BigAssNum temp2("1");
+    BigAssNum tempnum = num;
+    BigAssNum sub("1");
+    BigAssNum adds("1");
+    BigAssNum tempadd("1");
+    BigAssNum one("2");
+    BigAssNum two("2");
+    BigAssNum ten("10");
+
+    while(tempnum.getValue()[0] != '0') {
+        sub.setValue("1");
+        adds.setValue("1");
+        temp2.setValue("1");
+        tempadd.setValue("1");
+        temp = tempnum - sub;
+        if(temp.getValue()[0] == '-'){
+            ret = ret + tempadd;
+            break;
+        }
+
+        while(temp.getValue()[0] != '-') {
+            temp2 = sub;
+            tempadd = adds;
+            sub = sub * two;
+            adds = adds * ten;
+            temp = tempnum - sub;
+        }
+        tempnum = num;
+        tempnum = tempnum - temp2;
+        num = tempnum;
+        ret = ret + tempadd;
+    }
+    return ret.getValue();
+}
+
+
+std::string modBig(BigAssNum num, BigAssNum mod) { //only working for small numbers
+    std::string temp;
+    std::string bigtemp;
+    BigAssNum C("0");
+    BigAssNum tempC("0");
+    BigAssNum D("1");
+    BigAssNum tempD("1");
+    BigAssNum setD("1");
+    BigAssNum tempmod("0");
+    BigAssNum tempnum("0");
+    BigAssNum two("2");
+    temp = BigToBin(num);
+    for(int i = temp.size() - 1; i >= 0; i--) {
+        if(temp[i] == '1') {
+            bigtemp = D.getValue();
+            //setD = D;
+            tempmod = mod;
+            tempD = D - tempmod;
+            while(tempD.getValue()[0] != '-') {
+                bigtemp = tempD.getValue();
+                tempmod = mod;
+                tempD = tempD - tempmod;
+            }
+            D.setValue(bigtemp);
+            tempnum = C + D;
+            //D = setD;
+            C = tempnum;
+            bigtemp = C.getValue();
+            tempmod = mod;
+            tempC = tempnum - tempmod;
+            while(tempC.getValue()[0] != '-'){
+                bigtemp = tempC.getValue();
+                tempmod = mod;
+                tempC = tempC - tempmod;
+            }
+            C.setValue(bigtemp);
+        }
+        D = D * two;
+
+    }
+    return C.getValue();
+}
+
 
 
 int main() {
 
-    BigAssNum test1("174981883239023362650696299580");
-    BigAssNum test2("2");
-    std::string result = test1 * test2;
-    std::cout << prettyPrint(test1.getValue()) << " * " << prettyPrint(test2.getValue()) << " = " << prettyPrint(result) << std::endl;
-
-
-    /*
     BigAssNum test1("174981883239023362650696299580");
     BigAssNum test2("174981883239023362650696299580");
     BigAssNum test3("174981883239023362650696299580");
     BigAssNum modu("174981883239023362450696299581");
 
     BigAssNum product = test1 * test2;
+    product.setValue(modBig(product, modu));
     std::string result = product * test3;
     product.setValue(result);
     result = modBig(product,modu);
-    std::cout << prettyPrint(result) <<  std::endl;
-    */
+    std::cout << prettyPrint(test1.getValue()) <<"^3" << " mod " << prettyPrint(modu.getValue()) << " = " << prettyPrint(result) << std::endl;
 
-
-    /*
-
-    BigAssNum test1("174981883239023362650696299580");
-    BigAssNum test2("174981883239023362650696299580");
-    BigAssNum test3("174981883239023362650696299580");
-
-    BigAssNum product = test1 * test2;
-    std::string result = product * test3;
-    std::cout << prettyPrint(result) <<  std::endl;
-
-    //std::string product = val1 * val2 * val3;
-
-
-
-
-    // Check if 174981883239023362650696299580 ^ 3 mod 174981883239023362450696299581 gave the right answer
-    bool correctAnswer = result == "5357710694893265063503016372118087519550604651571638219891423134484499571299081885912000";
-    std::string finalPrint = (correctAnswer) ? "Correct!" : "Incorrect!";
-    std::cout << finalPrint << std::endl;
-    */
     return 0;
 
 }
